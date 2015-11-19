@@ -1,0 +1,44 @@
+{
+  "name": "hmlb/date",
+  "description": "Date library for PHP projects.",
+  "type": "library",
+  "keywords": [
+    "hmlb",
+    "DDD",
+    "domain driven design",
+    "php",
+    "carbon"
+  ],
+  "authors": [
+    {
+      "name": "Hugues Maignol",
+      "email": "hugues@hmlb.fr",
+      "homepage": "https://www.hmlb.fr"
+    }
+  ],
+  "homepage": "https://github.com/hmlb/date",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5.0",
+    "symfony/translation": "~2.7|~3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "HMLB\\Date\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "HMLB\\Date\\Tests\\": "tests"
+    }
+  },
+  "prefer-stable": true,
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
