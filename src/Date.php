@@ -2,13 +2,13 @@
 
 namespace HMLB\Date;
 
-use InvalidArgumentException;
-use DateTimeZone;
-use DateTimeImmutable;
-use src\Translation\DateLocalizationCapabilities;
-use DateTimeInterface;
 use Closure;
 use DatePeriod;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+use HMLB\Date\Translation\DateLocalizationCapabilities;
+use InvalidArgumentException;
 
 /**
  * An immutable Date objects with a rich API.
@@ -178,12 +178,12 @@ class Date extends DateTimeImmutable
         if (static::hasTestNow() && (empty($time) || $time === 'now' || static::hasRelativeKeywords($time))) {
             $testInstance = clone static::getTestNow();
             if (static::hasRelativeKeywords($time)) {
-                $testInstance->modify($time);
+                $testInstance = $testInstance->modify($time);
             }
 
             //shift the time according to the given time zone
             if ($tz !== null && $tz !== static::getTestNow()->getTimezone()) {
-                $testInstance->setTimezone($tz);
+                $testInstance = $testInstance->setTimezone($tz);
             } else {
                 $tz = $testInstance->getTimezone();
             }
@@ -547,7 +547,7 @@ class Date extends DateTimeImmutable
     /**
      * @return int
      */
-    public function getTimeStamp()
+    public function getTimestamp()
     {
         return (int) $this->format('U');
     }
@@ -751,18 +751,6 @@ class Date extends DateTimeImmutable
      * @return static
      */
     public function timezone($value)
-    {
-        return $this->setTimezone($value);
-    }
-
-    /**
-     * Alias for setTimezone().
-     *
-     * @param DateTimeZone|string $value
-     *
-     * @return static
-     */
-    public function tz($value)
     {
         return $this->setTimezone($value);
     }
@@ -1551,10 +1539,11 @@ class Date extends DateTimeImmutable
      */
     public function addMonthsNoOverflow($value)
     {
-        $date = $this->copy()->addMonths($value);
+        $date = $this->addMonths($value);
 
         if ($date->getDay() !== $this->getDay()) {
-            $date->day(1)->subMonth()->day($date->getDaysInMonth());
+            $date = $date->day(1)->subMonth();
+            $date = $date->day($date->getDaysInMonth());
         }
 
         return $date;
@@ -1562,14 +1551,13 @@ class Date extends DateTimeImmutable
 
     /**
      * Add a month with no overflow to the instance.
-     *
-     * @param int $value
+     **.
      *
      * @return static
      */
-    public function addMonthNoOverflow($value = 1)
+    public function addMonthNoOverflow()
     {
-        return $this->addMonthsNoOverflow($value);
+        return $this->addMonthsNoOverflow(1);
     }
 
     /**
@@ -1655,7 +1643,10 @@ class Date extends DateTimeImmutable
      */
     public function addWeekdays($value)
     {
-        return $this->modify((int) $value.' weekday');
+        // fix for https://bugs.php.net/bug.php?id=54909
+        $t = $this->toTimeString();
+
+        return $this->modify((int) $value.' weekday')->setTimeFromTimeString($t);
     }
 
     /**
@@ -1963,7 +1954,7 @@ class Date extends DateTimeImmutable
      */
     public function diffInDaysFiltered(Closure $callback, Date $dt = null, $abs = true)
     {
-        return $this->diffFiltered(DateInterval::day(), $callback, $dt, $abs);
+        return $this->diffFiltered(Interval::day(), $callback, $dt, $abs);
     }
 
     /**
@@ -1977,20 +1968,20 @@ class Date extends DateTimeImmutable
      */
     public function diffInHoursFiltered(Closure $callback, Date $dt = null, $abs = true)
     {
-        return $this->diffFiltered(DateInterval::hour(), $callback, $dt, $abs);
+        return $this->diffFiltered(Interval::hour(), $callback, $dt, $abs);
     }
 
     /**
      * Get the difference by the given interval using a filter closure.
      *
-     * @param DateInterval $ci       An interval to traverse by
-     * @param Closure      $callback
-     * @param Date|null    $dt
-     * @param bool         $abs      Get the absolute of the difference
+     * @param Interval  $ci       An interval to traverse by
+     * @param Closure   $callback
+     * @param Date|null $dt
+     * @param bool      $abs      Get the absolute of the difference
      *
      * @return int
      */
-    public function diffFiltered(DateInterval $ci, Closure $callback, Date $dt = null, $abs = true)
+    public function diffFiltered(Interval $ci, Closure $callback, Date $dt = null, $abs = true)
     {
         $start = $this;
         $end = $dt ?: static::now($this->getTimezone());
@@ -2324,7 +2315,7 @@ class Date extends DateTimeImmutable
     public function startOfWeek()
     {
         if ($this->getDayOfWeek() !== static::$weekStartsAt) {
-            $this->previous(static::$weekStartsAt);
+            return $this->previous(static::$weekStartsAt);
         }
 
         return $this->startOfDay();
@@ -2338,7 +2329,7 @@ class Date extends DateTimeImmutable
     public function endOfWeek()
     {
         if ($this->getDayOfWeek() !== static::$weekEndsAt) {
-            $this->next(static::$weekEndsAt);
+            return $this->next(static::$weekEndsAt)->endOfDay();
         }
 
         return $this->endOfDay();
@@ -2394,13 +2385,13 @@ class Date extends DateTimeImmutable
      */
     public function firstOfMonth($dayOfWeek = null)
     {
-        $this->startOfDay();
+        $date = $this->startOfDay();
 
         if ($dayOfWeek === null) {
-            return $this->day(1);
+            return $date->day(1);
         }
 
-        return $this->modify('first '.static::$days[$dayOfWeek].' of '.$this->format('F').' '.$this->year);
+        return $this->modify('first '.static::$days[$dayOfWeek].' of '.$this->format('F').' '.$this->getYear());
     }
 
     /**
@@ -2415,10 +2406,10 @@ class Date extends DateTimeImmutable
      */
     public function lastOfMonth($dayOfWeek = null)
     {
-        $this->startOfDay();
+        $date = $this->startOfDay();
 
         if ($dayOfWeek === null) {
-            return $this->day($this->getDaysInMonth());
+            return $date->day($this->getDaysInMonth());
         }
 
         return $this->modify('last '.static::$days[$dayOfWeek].' of '.$this->format('F').' '.$this->getYear());
@@ -2439,7 +2430,7 @@ class Date extends DateTimeImmutable
     {
         $dt = $this->copy()->firstOfMonth();
         $check = $dt->format('Y-m');
-        $dt->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
+        $dt = $dt->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
         return $dt->format('Y-m') === $check ? $this->modify($dt) : false;
     }

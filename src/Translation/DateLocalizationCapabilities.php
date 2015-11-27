@@ -1,6 +1,6 @@
 <?php
 
-namespace src\Translation;
+namespace HMLB\Date\Translation;
 
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
@@ -9,7 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Trait LocalizationCapabilities.
  *
- * @author Hugues Maignol <hugues.maignol@kitpages.fr>
+ * @author Hugues Maignol <hugues@hmlb.frr>
  */
 trait DateLocalizationCapabilities
 {
@@ -75,19 +75,64 @@ trait DateLocalizationCapabilities
      * Set the current translator locale.
      *
      * @param string $locale
+     *
+     * @return bool
      */
     public static function setLocale($locale)
     {
         static::translator()->setLocale($locale);
-        static::loadLocaleResource($locale);
+
+        return static::loadLocaleResource($locale);
     }
 
+    /**
+     * @param string $locale
+     *
+     * @return bool
+     */
     protected static function loadLocaleResource($locale)
     {
         $translator = static::translator();
         if ($translator instanceof Translator) {
-            $localeFile = sprintf('%s/Lang/%s.php', __DIR__, $locale);
-            $translator->addResource('array', require $localeFile, $locale);
+            foreach (static::getLocaleResourceFilepaths($locale) as $filepath) {
+                if (is_readable($filepath)) {
+                    $translator->addResource('array', require $filepath, $locale);
+
+                    return true;
+                }
+            }
+
+            return false;
         }
+
+        return true;
+    }
+
+    /**
+     * @param $locale
+     *
+     * @return string[]
+     */
+    protected static function getLocaleResourceFilepaths($locale)
+    {
+        $localePartDelimiters = ['-', '_'];
+        $multipart = false;
+        foreach ($localePartDelimiters as $delimiter) {
+            $locale = explode($delimiter, $locale);
+            if (1 !== count($locale)) {
+                $multipart = true;
+                break;
+            }
+            $locale = $locale[0];
+        }
+        if (!$multipart) {
+            return [sprintf('%s/Lang/%s.php', __DIR__, $locale)];
+        }
+        $paths = [];
+        foreach ($localePartDelimiters as $delimiter) {
+            $paths[] = sprintf('%s/Lang/%s%s%s.php', __DIR__, $locale[0], $delimiter, $locale[1]);
+        }
+
+        return $paths;
     }
 }

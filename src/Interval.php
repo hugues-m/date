@@ -2,12 +2,12 @@
 
 namespace HMLB\Date;
 
-use DateInterval as BaseDateInterval;
+use DateInterval;
+use HMLB\Date\Translation\DateLocalizationCapabilities;
 use InvalidArgumentException;
-use src\Translation\DateLocalizationCapabilities;
 
 /**
- * A simple API extension for DateInterval.
+ * A simple API extension for Interval.
  * The implemenation provides helpers to handle weeks but only days are saved.
  * Weeks are calculated based on the total days of the current instance.
  *
@@ -37,24 +37,24 @@ use src\Translation\DateLocalizationCapabilities;
  * @method static minute() minute($minutes = 1) Alias for minutes().
  * @method static seconds() seconds($seconds = 1) Set the seconds portion of the current interval.
  * @method static second() second($seconds = 1) Alias for seconds().
- * @method DateInterval years() years($years = 1) Set the years portion of the current interval.
- * @method DateInterval year() year($years = 1) Alias for years().
- * @method DateInterval months() months($months = 1) Set the months portion of the current interval.
- * @method DateInterval month() month($months = 1) Alias for months().
- * @method DateInterval weeks() weeks($weeks = 1) Set the weeks portion of the current interval.  Will overwrite dayz
+ * @method Interval years() years($years = 1) Set the years portion of the current interval.
+ * @method Interval year() year($years = 1) Alias for years().
+ * @method Interval months() months($months = 1) Set the months portion of the current interval.
+ * @method Interval month() month($months = 1) Alias for months().
+ * @method Interval weeks() weeks($weeks = 1) Set the weeks portion of the current interval.  Will overwrite dayz
  *         value.
- * @method DateInterval week() week($weeks = 1) Alias for weeks().
- * @method DateInterval days() days($days = 1) Set the days portion of the current interval.
- * @method DateInterval dayz() dayz($days = 1) Alias for days().
- * @method DateInterval day() day($days = 1) Alias for days().
- * @method DateInterval hours() hours($hours = 1) Set the hours portion of the current interval.
- * @method DateInterval hour() hour($hours = 1) Alias for hours().
- * @method DateInterval minutes() minutes($minutes = 1) Set the minutes portion of the current interval.
- * @method DateInterval minute() minute($minutes = 1) Alias for minutes().
- * @method DateInterval seconds() seconds($seconds = 1) Set the seconds portion of the current interval.
- * @method DateInterval second() second($seconds = 1) Alias for seconds().
+ * @method Interval week() week($weeks = 1) Alias for weeks().
+ * @method Interval days() days($days = 1) Set the days portion of the current interval.
+ * @method Interval dayz() dayz($days = 1) Alias for days().
+ * @method Interval day() day($days = 1) Alias for days().
+ * @method Interval hours() hours($hours = 1) Set the hours portion of the current interval.
+ * @method Interval hour() hour($hours = 1) Alias for hours().
+ * @method Interval minutes() minutes($minutes = 1) Set the minutes portion of the current interval.
+ * @method Interval minute() minute($minutes = 1) Alias for minutes().
+ * @method Interval seconds() seconds($seconds = 1) Set the seconds portion of the current interval.
+ * @method Interval second() second($seconds = 1) Alias for seconds().
  */
-class DateInterval extends BaseDateInterval
+class Interval extends DateInterval
 {
     use DateLocalizationCapabilities;
     /**
@@ -92,7 +92,7 @@ class DateInterval extends BaseDateInterval
     ///////////////////////////////////////////////////////////////////
 
     /**
-     * Create a new DateInterval instance.
+     * Create a new Interval instance.
      *
      * @param int $years
      * @param int $months
@@ -138,10 +138,10 @@ class DateInterval extends BaseDateInterval
     }
 
     /**
-     * Create a new DateInterval instance from specific values.
+     * Create a new Interval instance from specific values.
      * This is an alias for the constructor that allows better fluent
-     * syntax as it allows you to do DateInterval::create(1)->fn() rather than
-     * (new DateInterval(1))->fn().
+     * syntax as it allows you to do Interval::create(1)->fn() rather than
+     * (new Interval(1))->fn().
      *
      * @param int $years
      * @param int $months
@@ -166,7 +166,7 @@ class DateInterval extends BaseDateInterval
     }
 
     /**
-     * Provide static helpers to create instances.  Allows DateInterval::years(3).
+     * Provide static helpers to create instances.  Allows Interval::years(3).
      *
      * Note: This is done using the magic method to allow static and instance methods to
      *       have the same names.
@@ -215,20 +215,18 @@ class DateInterval extends BaseDateInterval
     }
 
     /**
-     * Create a DateInterval instance from a DateInterval one.  Can not instance
-     * DateInterval objects created from DateTime::diff() as you can't externally
+     * Create a Interval instance from a DateInterval one.  Can not instance
+     * Interval objects created from DateTime::diff() as you can't externally
      * set the $days field.
      *
-     * @param DateInterval $di
-     *
-     * @throws InvalidArgumentException
+     * @param DateInterval|Interval $di
      *
      * @return static
      */
     public static function instance(DateInterval $di)
     {
         if (static::wasCreatedFromDiff($di)) {
-            throw new InvalidArgumentException('Can not instance a DateInterval object created from DateTime::diff().');
+            throw new InvalidArgumentException('Can not instance a Interval object created from DateTime::diff().');
         }
 
         $instance = new static($di->y, $di->m, 0, $di->d, $di->h, $di->i, $di->s);
@@ -243,7 +241,7 @@ class DateInterval extends BaseDateInterval
     ///////////////////////////////////////////////////////////////////
 
     /**
-     * Get a part of the DateInterval object.
+     * Get a part of the Interval object.
      *
      * @param string $name
      *
@@ -285,7 +283,7 @@ class DateInterval extends BaseDateInterval
     }
 
     /**
-     * Set a part of the DateInterval object.
+     * Set a part of the Interval object.
      *
      * @param string $name
      * @param int    $val
@@ -341,7 +339,7 @@ class DateInterval extends BaseDateInterval
     }
 
     /**
-     * Allow fluent calls on the setters... DateInterval::years(3)->months(5)->day().
+     * Allow fluent calls on the setters... Interval::years(3)->months(5)->day().
      *
      * Note: This is done using the magic method to allow static and instance methods to
      *       have the same names.
