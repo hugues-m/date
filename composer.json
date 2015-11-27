@@ -1,6 +1,6 @@
 {
   "name": "hmlb/date",
-  "description": "Date library for PHP projects.",
+  "description": "Immutable Date library with a rich API for PHP projects.",
   "type": "library",
   "keywords": [
     "hmlb",
