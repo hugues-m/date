@@ -148,7 +148,6 @@ class GettersTest extends AbstractTestCase
     public function testGetLocalTrue()
     {
         // Default timezone has been set to America/Toronto in AbstractTestCase.php
-        // @see : http://en.wikipedia.org/wiki/List_of_UTC_time_offsets
         $this->assertTrue(Date::createFromDate(2012, 1, 1, 'America/Toronto')->getLocal());
         $this->assertTrue(Date::createFromDate(2012, 1, 1, 'America/New_York')->getLocal());
     }

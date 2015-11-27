@@ -225,7 +225,7 @@ class Interval extends DateInterval
      */
     public static function instance(DateInterval $di)
     {
-        if (static::wasCreatedFromDiff($di)) {
+        if (self::wasCreatedFromDiff($di)) {
             throw new InvalidArgumentException('Can not instance a Interval object created from DateTime::diff().');
         }
 
@@ -234,6 +234,18 @@ class Interval extends DateInterval
         $instance->days = $di->days;
 
         return $instance;
+    }
+
+    /**
+     * @param string $intervalSpec
+     *
+     * @return Interval
+     */
+    public static function createFromSpec($intervalSpec)
+    {
+        $interval = new DateInterval($intervalSpec);
+
+        return static::instance($interval);
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -302,7 +314,7 @@ class Interval extends DateInterval
                 break;
 
             case 'weeks':
-                $this->d = $val * Date::DAYS_PER_WEEK;
+                $this->d = (int) $val * Date::DAYS_PER_WEEK;
                 break;
 
             case 'dayz':
@@ -442,7 +454,7 @@ class Interval extends DateInterval
     {
         $sign = $interval->invert === 1 ? -1 : 1;
 
-        if (static::wasCreatedFromDiff($interval)) {
+        if (self::wasCreatedFromDiff($interval)) {
             $this->dayz = $this->dayz + $interval->days * $sign;
         } else {
             $this->years = $this->years + $interval->y * $sign;

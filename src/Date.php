@@ -1643,7 +1643,7 @@ class Date extends DateTimeImmutable
      */
     public function addWeekdays($value)
     {
-        // fix for https://bugs.php.net/bug.php?id=54909
+        // fix for php bug #54909
         $t = $this->toTimeString();
 
         return $this->modify((int) $value.' weekday')->setTimeFromTimeString($t);

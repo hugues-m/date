@@ -19,8 +19,8 @@ class AddTest extends AbstractTestCase
 {
     public function testAdd()
     {
-        $ci = Interval::create(4, 3, 6, 7, 8, 10, 11)->add(new Interval('P2Y1M5DT22H33M44S'));
-        //$this->assertInterval($ci, 6, 4, 54, 30, 43, 55);
+        $ci = Interval::create(4, 3, 6, 7, 8, 10, 11)->add(Interval::createFromSpec('P2Y1M5DT22H33M44S'));
+        $this->assertInterval($ci, 6, 4, 54, 30, 43, 55);
     }
 
     public function testAddWithDiffInterval()
