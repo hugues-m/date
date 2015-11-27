@@ -168,10 +168,10 @@ class Date extends DateTimeImmutable
      * Please see the testing aids section (specifically static::setTestNow())
      * for more on the possibility of this constructor returning a test instance.
      *
-     * @param string|null              $time
+     * @param string                   $time
      * @param DateTimeZone|string|null $tz
      */
-    public function __construct($time = null, $tz = null)
+    public function __construct($time = 'now', $tz = null)
     {
         // If the class has a test now set and we are trying to create a now()
         // instance then override as required
@@ -2432,7 +2432,7 @@ class Date extends DateTimeImmutable
         $check = $dt->format('Y-m');
         $dt = $dt->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
-        return $dt->format('Y-m') === $check ? $this->modify($dt) : false;
+        return $dt->format('Y-m') === $check ? $this->modify((string) $dt) : false;
     }
 
     /**
@@ -2483,7 +2483,7 @@ class Date extends DateTimeImmutable
         $year = $dt->getYear();
         $dt = $dt->firstOfQuarter()->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
-        return ($lastMonth < $dt->getMonth() || $year !== $dt->getYear()) ? false : $this->modify($dt);
+        return ($lastMonth < $dt->getMonth() || $year !== $dt->getYear()) ? false : $this->modify((string) $dt);
     }
 
     /**
@@ -2531,7 +2531,7 @@ class Date extends DateTimeImmutable
     {
         $dt = $this->copy()->firstOfYear()->modify('+'.$nth.' '.static::$days[$dayOfWeek]);
 
-        return $this->getYear() === $dt->getYear() ? $this->modify($dt) : false;
+        return $this->getYear() === $dt->getYear() ? $this->modify((string) $dt) : false;
     }
 
     /**

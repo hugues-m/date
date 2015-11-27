@@ -165,13 +165,4 @@ class CreateTest extends AbstractTestCase
     {
         Date::createFromDate(2000, 1, 1, 'Mars/Somewhere');
     }
-
-    /**
-     * @skip
-     */
-    public function testCreateWithValidTimezoneOffset()
-    {
-        $dt = Date::createFromDate(2000, 1, 1, -4);
-        //$this->assertSame('America/New_York', $dt->getTimezoneName());
-    }
 }
