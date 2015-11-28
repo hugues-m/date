@@ -724,9 +724,9 @@ class Date extends DateTimeImmutable
     {
         $time = explode(':', $time);
 
-        $hour = $time[0];
-        $minute = isset($time[1]) ? $time[1] : 0;
-        $second = isset($time[2]) ? $time[2] : 0;
+        $hour = (int) $time[0];
+        $minute = (int) isset($time[1]) ? $time[1] : 0;
+        $second = (int) isset($time[2]) ? $time[2] : 0;
 
         return $this->setTime($hour, $minute, $second);
     }
