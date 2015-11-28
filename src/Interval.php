@@ -287,7 +287,7 @@ class Interval extends DateInterval
 
             case 'daysExcludeWeeks':
             case 'dayzExcludeWeeks':
-                return $this->d % Date::DAYS_PER_WEEK;
+                return (int) $this->d % Date::DAYS_PER_WEEK;
 
             default:
                 throw new InvalidArgumentException(sprintf("Unknown getter '%s'", $name));
@@ -314,7 +314,7 @@ class Interval extends DateInterval
                 break;
 
             case 'weeks':
-                $this->d = (int) $val * Date::DAYS_PER_WEEK;
+                $this->d = (int) round($val * Date::DAYS_PER_WEEK);
                 break;
 
             case 'dayz':

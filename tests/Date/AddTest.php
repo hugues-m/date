@@ -99,7 +99,7 @@ class AddTest extends AbstractTestCase
 
         $this->assertSame(17, $dt->getDay());
 
-        // test for https://bugs.php.net/bug.php?id=54909
+        // test for phpbug id 54909
         $this->assertSame(13, $dt->getHour());
         $this->assertSame(2, $dt->getMinute());
         $this->assertSame(1, $dt->getSecond());
