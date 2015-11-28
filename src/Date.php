@@ -212,12 +212,12 @@ class Date extends DateTimeImmutable
      * Date::parse('Monday next week')->fn() rather than
      * (new Date('Monday next week'))->fn().
      *
-     * @param string|null              $time
+     * @param string                   $time
      * @param DateTimeZone|string|null $tz
      *
      * @return static
      */
-    public static function parse($time = null, $tz = null)
+    public static function parse($time = 'now', $tz = null)
     {
         return new static($time, $tz);
     }
@@ -231,7 +231,7 @@ class Date extends DateTimeImmutable
      */
     public static function now($tz = null)
     {
-        return new static(null, $tz);
+        return new static('now', $tz);
     }
 
     /**
@@ -1948,7 +1948,7 @@ class Date extends DateTimeImmutable
      *
      * @param Closure   $callback
      * @param Date|null $dt
-     * @param bool      $abs      Get the absolute of the difference
+     * @param bool      $abs Get the absolute of the difference
      *
      * @return int
      */
@@ -1962,7 +1962,7 @@ class Date extends DateTimeImmutable
      *
      * @param Closure   $callback
      * @param Date|null $dt
-     * @param bool      $abs      Get the absolute of the difference
+     * @param bool      $abs Get the absolute of the difference
      *
      * @return int
      */
@@ -1974,10 +1974,10 @@ class Date extends DateTimeImmutable
     /**
      * Get the difference by the given interval using a filter closure.
      *
-     * @param Interval  $ci       An interval to traverse by
+     * @param Interval  $ci  An interval to traverse by
      * @param Closure   $callback
      * @param Date|null $dt
-     * @param bool      $abs      Get the absolute of the difference
+     * @param bool      $abs Get the absolute of the difference
      *
      * @return int
      */
