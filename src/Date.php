@@ -1948,7 +1948,7 @@ class Date extends DateTimeImmutable
      *
      * @param Closure   $callback
      * @param Date|null $dt
-     * @param bool      $abs Get the absolute of the difference
+     * @param bool      $abs      Get the absolute of the difference
      *
      * @return int
      */
@@ -1962,7 +1962,7 @@ class Date extends DateTimeImmutable
      *
      * @param Closure   $callback
      * @param Date|null $dt
-     * @param bool      $abs Get the absolute of the difference
+     * @param bool      $abs      Get the absolute of the difference
      *
      * @return int
      */
@@ -1974,10 +1974,10 @@ class Date extends DateTimeImmutable
     /**
      * Get the difference by the given interval using a filter closure.
      *
-     * @param Interval  $ci  An interval to traverse by
+     * @param Interval  $ci       An interval to traverse by
      * @param Closure   $callback
      * @param Date|null $dt
-     * @param bool      $abs Get the absolute of the difference
+     * @param bool      $abs      Get the absolute of the difference
      *
      * @return int
      */
